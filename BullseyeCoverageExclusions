@@ -1,0 +1,2 @@
+exclude folder *:/Program Files/
+exclude folder @BUILD-*/CMakeFiles/

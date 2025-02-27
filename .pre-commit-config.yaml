@@ -1,0 +1,44 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+- repo: ssh://git@git.jetbrains.space/gpu-audio/common/bg-pre-commit.git
+  rev: cd69ef1b9cf5cdd1ebdfc94993232feadff9d172
+  hooks:
+  - id: clang-format
+    args: [--style=file, -i]
+    types_or: [c++, c, cuda]
+  - id: editorconfig-checker
+  - id: trailing-whitespace
+  - id: check-added-large-files
+    args: [--maxkb=256]
+  - id: check-case-conflict
+  # TODO: Correct workflow for Git under Windows/WSL2/Linux/macOS (file permissions)
+  #- id: check-executables-have-shebangs
+  #- id: check-shebang-scripts-are-executable
+  - id: check-json
+  - id: check-merge-conflict
+  - id: check-symlinks
+  - id: check-yaml
+  # TODO: Run pre-commit on linux agents and mount teamcity git cache inside container
+  # Or run pre-commit himself inside docker container + convert hooks to "system" language
+  #- id: destroyed-symlinks
+  - id: detect-private-key
+  - id: end-of-file-fixer
+  - id: fix-byte-order-marker
+  - id: mixed-line-ending
+    args: [--fix=no]
+  - id: pretty-format-json
+  - id: trailing-whitespace
+  - id: shellcheck
+  - id: check_git_config_email
+    stages: [manual]
+  # Python checks
+  - id: pylint
+    verbose: true
+  - id: check-ast
+  - id: check-builtin-literals
+  - id: check-docstring-first
+  - id: debug-statements
+  # TODO: Do we need this?
+  #- id: double-quote-string-fixer
+  - id: fix-encoding-pragma

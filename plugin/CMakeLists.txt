@@ -1,0 +1,70 @@
+set(PROJECT_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
+set(SRC_FILES
+        "${PROJECT_DIR}/config.h"
+        "${PROJECT_DIR}/architecture.hpp"
+        "${PROJECT_DIR}/choc_DisableAllWarnings.h"
+        "${PROJECT_DIR}/choc_ReenableAllWarnings.h"
+        "${PROJECT_DIR}/Colors.h"
+        "${PROJECT_DIR}/NeuralAmpModeler.cpp"
+        "${PROJECT_DIR}/NeuralAmpModeler.h"
+        "${PROJECT_DIR}/NeuralAmpModelerControls.h"
+        "${PROJECT_DIR}/ToneStack.cpp"
+        "${PROJECT_DIR}/ToneStack.h"
+)
+source_group(TREE ${PROJECT_DIR} FILES ${SRC_FILES})
+
+set(RESOURCES
+        "${PROJECT_DIR}/resources/fonts/Roboto-Regular.ttf"
+        "${PROJECT_DIR}/resources/fonts/Michroma-Regular.ttf"
+)
+
+add_library(_base INTERFACE)
+iplug_target_add(_base INTERFACE
+        INCLUDE ${PROJECT_DIR} ${PROJECT_DIR}/resources
+        LINK iPlug2_NanoVG_GL2
+        FEATURE cxx_std_20)
+
+# Patch: nam_plugin/deps/iPlug2/Scripts/cmake/IGraphics.cmake
+if(APPLE)
+    set(_src ${IGRAPHICS_SRC}/Drawing/IGraphicsNanoVG_src.m)
+    set_source_files_properties(${_src} PROPERTIES COMPILE_OPTIONS "-fobjc-arc")
+endif()
+
+target_link_libraries(_base INTERFACE AudioDSPTools namlib)
+
+# For typing convenience the TARGET name is put into a variable.
+set(TARGET app)
+add_executable(${TARGET} WIN32 MACOSX_BUNDLE ${SRC_FILES})
+iplug_target_add(${TARGET} PUBLIC LINK iPlug2_APP _base RESOURCE ${RESOURCES})
+iplug_configure_target(${TARGET} app)
+
+set(TARGET vst3)
+add_library(${TARGET} MODULE ${SRC_FILES})
+iplug_target_add(${TARGET} PUBLIC LINK iPlug2_VST3 _base RESOURCE ${RESOURCES})
+iplug_configure_target(${TARGET} vst3)
+
+# Copy builded artifact into common VST3 directory
+if (WIN32)
+    if (VST3_WIN_DEPLOY)
+        set(src_bndl "${CMAKE_BINARY_DIR}/out/${CMAKE_PROJECT_NAME}.vst3")
+        set(dst_bndl "$ENV{CommonProgramFiles}/vst3/${CMAKE_PROJECT_NAME}.vst3")
+
+        file(TO_CMAKE_PATH "${dst_bndl}" dst_bndl)
+
+        add_custom_command(TARGET ${TARGET} POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E copy_directory ${src_bndl} ${dst_bndl}
+                COMMAND ${CMAKE_COMMAND} -E echo "Deploy VST3 BUNDLE into ${dst_bndl}"
+        )
+    endif ()
+endif ()
+
+if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
+    set(TARGET auv2)
+    add_library(${TARGET} MODULE ${SRC_FILES})
+    iplug_target_add(${TARGET} PUBLIC LINK iPlug2_AUv2 _base RESOURCE ${RESOURCES})
+    iplug_configure_target(${TARGET} auv2)
+endif ()
+
+if (WIN32)
+    set(CMAKE_RC_FLAGS "/I${PROJECT_DIR}/resources /I${PROJECT_DIR}/resources/fonts /I${PROJECT_DIR}/resources/img ${CMAKE_RC_FLAGS}")
+endif ()

@@ -1,0 +1,8 @@
+[MASTER]
+disable=
+    C0114, # missing-module-docstring
+    C0115, # missing-class-docstring
+    C0116  # missing-function-docstring
+jobs=0
+load-plugins=conans.pylint_plugin
+generated-members=conan.*
