@@ -5,5 +5,4 @@
 [submodule "deps/iPlug2"]
 	path = deps/iPlug2
 	url = git@github.com:gpuaudio/iPlug2_cmake.git
-	branch = patch_mac
 	
