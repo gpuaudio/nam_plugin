@@ -30,7 +30,11 @@ if(APPLE)
     set_source_files_properties(${_src} PROPERTIES COMPILE_OPTIONS "-fobjc-arc")
 endif()
 
-target_link_libraries(_base INTERFACE AudioDSPTools namlib)
+if (CMAKE_GENERATOR MATCHES "Visual Studio")
+    target_link_libraries(_base INTERFACE AudioDSPTools namlib_mt)
+else()
+    target_link_libraries(_base INTERFACE AudioDSPTools namlib)
+endif()
 
 # For typing convenience the TARGET name is put into a variable.
 set(TARGET app)
