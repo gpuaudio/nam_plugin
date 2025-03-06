@@ -46,8 +46,8 @@ iplug_configure_target(${TARGET} vst3)
 # Copy builded artifact into common VST3 directory
 if (WIN32)
     if (VST3_WIN_DEPLOY)
-        set(src_bndl "${CMAKE_BINARY_DIR}/out/${CMAKE_PROJECT_NAME}.vst3")
-        set(dst_bndl "$ENV{CommonProgramFiles}/vst3/${CMAKE_PROJECT_NAME}.vst3")
+        set(src_bndl "${CMAKE_BINARY_DIR}/out/${PROJECT_NAME}.vst3")
+        set(dst_bndl "$ENV{CommonProgramFiles}/vst3/${PROJECT_NAME}.vst3")
 
         file(TO_CMAKE_PATH "${dst_bndl}" dst_bndl)
 
