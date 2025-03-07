@@ -13,10 +13,18 @@ set(SRC_FILES
 )
 source_group(TREE ${PROJECT_DIR} FILES ${SRC_FILES})
 
-set(RESOURCES
+# Patch: nam_plugin/deps/iPlug2/Scripts/cmake/FindiPlug2.cmake
+# function(iplug_target_bundle_resources target res_dir)
+if(APPLE)
+    file(GLOB_RECURSE FONTS CONFIGURE_DEPENDS "${PROJECT_DIR}/resources/fonts/*")
+    file(GLOB_RECURSE IMAGES CONFIGURE_DEPENDS "${PROJECT_DIR}/resources/img/*")
+    set(RESOURCES "${FONTS}" "${IMAGES}")
+else()
+    set(RESOURCES
         "${PROJECT_DIR}/resources/fonts/Roboto-Regular.ttf"
         "${PROJECT_DIR}/resources/fonts/Michroma-Regular.ttf"
-)
+    )
+endif()
 
 add_library(_base INTERFACE)
 iplug_target_add(_base INTERFACE
