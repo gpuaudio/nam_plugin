@@ -55,21 +55,6 @@ add_library(${TARGET} MODULE ${SRC_FILES})
 iplug_target_add(${TARGET} PUBLIC LINK iPlug2_VST3 _base RESOURCE ${RESOURCES})
 iplug_configure_target(${TARGET} vst3)
 
-# Copy builded artifact into common VST3 directory
-if (WIN32)
-    if (VST3_WIN_DEPLOY)
-        set(src_bndl "${CMAKE_BINARY_DIR}/out/${PROJECT_NAME}.vst3")
-        set(dst_bndl "$ENV{CommonProgramFiles}/vst3/${PROJECT_NAME}.vst3")
-
-        file(TO_CMAKE_PATH "${dst_bndl}" dst_bndl)
-
-        add_custom_command(TARGET ${TARGET} POST_BUILD
-                COMMAND ${CMAKE_COMMAND} -E copy_directory ${src_bndl} ${dst_bndl}
-                COMMAND ${CMAKE_COMMAND} -E echo "Deploy VST3 BUNDLE into ${dst_bndl}"
-        )
-    endif ()
-endif ()
-
 if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
     set(TARGET auv2)
     add_library(${TARGET} MODULE ${SRC_FILES})

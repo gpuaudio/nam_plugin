@@ -307,3 +307,4 @@ conan.lock
 graph_info.json
 .bg_feature_file
 /dock
+/.vscode
