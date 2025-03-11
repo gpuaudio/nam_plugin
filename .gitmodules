@@ -1,8 +1,4 @@
 [submodule "deps/eigen"]
 	path = deps/eigen
 	url = https://gitlab.com/libeigen/eigen.git
-
-[submodule "deps/iPlug2"]
-	path = deps/iPlug2
-	url = git@github.com:gpuaudio/iPlug2_cmake.git
 	
